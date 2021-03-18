@@ -13,31 +13,17 @@ class Simulator
     plans = Plan.import(path: "plans.csv")
     # 該当プランに計算結果(メソッドの返り値)のハッシュを追加
     plans.each do |plan|
-      case
-      when plan[:provider_name] == "東京電力エナジーパートナー" then plan[:price]= "#{self.calc_planA(@amp,@usage_per_week)}"
-      when plan[:provider_name] == "Looopでんき" then plan[:price]= "#{self.calc_planB(@amp,@usage_per_week)}"
-      when plan[:provider_name] == "東京ガス" && [30,40,50,60].include?(@amp) then plan[:price] = "#{self.calc_planC(@amp,@usage_per_week)}"
+      case  plan[:provider_name]
+      when "東京電力エナジーパートナー"
+        plan[:price]= "#{self.calc_planA(@amp,@usage_per_week)}"
+      when "Looopでんき"
+        plan[:price]= "#{self.calc_planB(@amp,@usage_per_week)}"
+      when "東京ガス" && [30,40,50,60].include?(@amp)
+        plan[:price] = "#{self.calc_planC(@amp,@usage_per_week)}"
       end
     end
     puts plans
 
-    #以下の方法だとプランが追加されると対応できず、面倒な追記となる。
-    # if @amp >= 30
-    # output_params = [
-    #   {provider_name: "東京電力エナジーパートナー", plan_name: "従量電灯B", price: "#{self.calc_planA(@amp,@usage_per_week)}"},
-    #   {provider_name: " Looopでんき", plan_name: "おうちプラン", price: "#{self.calc_planB(@amp,@usage_per_week)}"},
-    #   {provider_name: " 東京ガス", plan_name: "ずっとも電気１", price: "#{self.calc_planC(@amp,@usage_per_week)}"}
-    #   ]
-
-    # ## 東京ガスのずっとも電気は30Aからのプランである為、30A未満は表示させない。
-    # else
-    # output_params = [
-    #   {provider_name: "東京電力エナジーパートナー", plan_name: "従量電灯B", price: "#{self.calc_planA(@amp,@usage_per_week)}"},
-    #   {provider_name: " Looopでんき", plan_name: "おうちプラン", price: "#{self.calc_planB(@amp,@usage_per_week)}"}
-    #   ]
-    # end
-
-    # puts output_params
   end
 
   private
