@@ -11,7 +11,7 @@ class Simulator
   def simulate
     # プロバイダと料金プランのCSVデータをインポート
     plans = Plan.import(path: "plans.csv")
-    # 該当プランに計算結果のハッシュを追加
+    # 該当プランに計算結果(メソッドの返り値)のハッシュを追加
     plans.each do |plan|
       case
       when plan[:provider_name] == "東京電力エナジーパートナー" then plan[:price]= "#{self.calc_planA(@amp,@usage_per_week)}"
@@ -20,7 +20,8 @@ class Simulator
       end
     end
     puts plans
-    #以下、プランが追加されると対応できない。
+
+    #以下の方法だとプランが追加されると対応できず、面倒な追記となる。
     # if @amp >= 30
     # output_params = [
     #   {provider_name: "東京電力エナジーパートナー", plan_name: "従量電灯B", price: "#{self.calc_planA(@amp,@usage_per_week)}"},
