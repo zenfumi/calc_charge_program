@@ -40,7 +40,7 @@ class Simulator
     # puts output_params
   end
 
-
+  private
   #各プランを各メソッドで計算する
 
   #東京電力エナジーパートナーの従量電灯Bの計算メソッド
