@@ -11,7 +11,7 @@ class Simulator
   def simulate
     # プロバイダと料金プランのCSVデータをインポート
     plans = Plan.import(path: "plans.csv")
-    # 該当プランに計算結果(メソッドの返り値)のハッシュを追加
+    # 該当プランに計算結果(メソッドの返り値)のハッシュを追加・全プラン表示
     plans.each do |plan|
       case  plan[:provider_name]
       when "東京電力エナジーパートナー"
@@ -23,11 +23,10 @@ class Simulator
       end
     end
     puts plans
-
   end
 
+  #各プランごとに計算メソッドを定義
   private
-  #各プランを各メソッドで計算する
 
   #東京電力エナジーパートナーの従量電灯Bの計算メソッド
   def calc_planA(amp,usage_per_week)
@@ -96,7 +95,7 @@ class Simulator
 end
 
 
-# ****************実行部分***************************************************************
+# #****************実行部分***************************************************************
 
 ## 契約アンペアを入力
 while true
@@ -106,7 +105,7 @@ print "契約アンペアを入力して下さい > "
     puts "10,15,20,30,40,50,60のいずれかを入力して下さい"
 end
 
-## 1ヶ月あたりの使用量を入力させる
+## 1ヶ月あたりの使用量を入力
 while true
 print "1ヶ月あたりの使用量を入力して下さい > "
   usage_per_week = gets.to_i
@@ -114,7 +113,7 @@ print "1ヶ月あたりの使用量を入力して下さい > "
     puts "0以上の値を入力して下さい"
 end
 
-# シミュレーターの生成(Simulatorクラスのインスタンスを生成)
+# 入力値を引数にSimulatorクラスのインスタンスを生成
 simulator = Simulator.new(amp,usage_per_week)
-# 生成されたインスタンスに対してsimulateメソッドを実行して出力結果を表示
+# インスタンスに対してsimulateメソッド(計算メソッド)を実行して出力結果を表示する
 simulator.simulate
