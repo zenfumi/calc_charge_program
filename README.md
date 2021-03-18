@@ -6,9 +6,17 @@
 
 ### 悩んだこと
 
+-
+- self の使い方(メソッドの中でメソッドを使う方法)
+
 ### 特にアピールしたい点
 
 ### 独自の工夫点（例：オブジェクト指向、汎用化、品質担保など)
 
-## 課題URL
-https://docs.google.com/presentation/d/1V-WDpsajn7wrCbM41zRtzEndt9lKXvAuRyR_Clgl5d8/edit#slide=id.g6fd79eed8f_0_55
+- 定数の設定
+- User クラスの設定
+- 実行部分を分ける
+- クラスがある前提で何が登場するかを考える
+- CSV にデータを入れる(処理が増えれば増えるほど行が増え、処理が見づらくなる為)
+  - https://docs.ruby-lang.org/ja/latest/class/CSV.html
+  - 扱いやすいハッシュ形式でデータをインポートした。

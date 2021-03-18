@@ -1,3 +1,6 @@
+require "pry"
+require_relative "plan"
+
 class Simulator
 
   def initialize(amp,usage_per_week)
@@ -6,22 +9,34 @@ class Simulator
   end
 
   def simulate
-    if @amp >= 30
-    output_params = [
-      {provider_name: "東京電力エナジーパートナー", plan_name: "従量電灯B", price: "#{self.calc_planA(@amp,@usage_per_week)}"},
-      {provider_name: " Looopでんき", plan_name: "おうちプラン", price: "#{self.calc_planB(@amp,@usage_per_week)}"},
-      {provider_name: " 東京ガス", plan_name: "ずっとも電気１", price: "#{self.calc_planC(@amp,@usage_per_week)}"}
-      ]
-
-    ## 東京ガスのずっとも電気は30Aからのプランである為、30A未満は表示させない。
-    else
-    output_params = [
-      {provider_name: "東京電力エナジーパートナー", plan_name: "従量電灯B", price: "#{self.calc_planA(@amp,@usage_per_week)}"},
-      {provider_name: " Looopでんき", plan_name: "おうちプラン", price: "#{self.calc_planB(@amp,@usage_per_week)}"}
-      ]
+    # プロバイダと料金プランのCSVデータをインポート
+    plans = Plan.import(path: "plans.csv")
+    # 該当プランに計算結果のハッシュを追加
+    plans.each do |plan|
+      case
+      when plan[:provider_name] == "東京電力エナジーパートナー" then plan[:price]= "#{self.calc_planA(@amp,@usage_per_week)}"
+      when plan[:provider_name] == "Looopでんき" then plan[:price]= "#{self.calc_planB(@amp,@usage_per_week)}"
+      when plan[:provider_name] == "東京ガス" && [30,40,50,60].include?(@amp) then plan[:price] = "#{self.calc_planC(@amp,@usage_per_week)}"
+      end
     end
+    puts plans
+    #以下、プランが追加されると対応できない。
+    # if @amp >= 30
+    # output_params = [
+    #   {provider_name: "東京電力エナジーパートナー", plan_name: "従量電灯B", price: "#{self.calc_planA(@amp,@usage_per_week)}"},
+    #   {provider_name: " Looopでんき", plan_name: "おうちプラン", price: "#{self.calc_planB(@amp,@usage_per_week)}"},
+    #   {provider_name: " 東京ガス", plan_name: "ずっとも電気１", price: "#{self.calc_planC(@amp,@usage_per_week)}"}
+    #   ]
 
-    puts output_params
+    # ## 東京ガスのずっとも電気は30Aからのプランである為、30A未満は表示させない。
+    # else
+    # output_params = [
+    #   {provider_name: "東京電力エナジーパートナー", plan_name: "従量電灯B", price: "#{self.calc_planA(@amp,@usage_per_week)}"},
+    #   {provider_name: " Looopでんき", plan_name: "おうちプラン", price: "#{self.calc_planB(@amp,@usage_per_week)}"}
+    #   ]
+    # end
+
+    # puts output_params
   end
 
 
@@ -93,10 +108,8 @@ class Simulator
   end
 end
 
-# 料金プランのCSVでのplan読込
 
-# plansの内容を持つプランのインスタンスを生成
-
+# ****************実行部分***************************************************************
 
 ## 契約アンペアを入力
 while true
