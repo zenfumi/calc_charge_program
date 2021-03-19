@@ -67,18 +67,13 @@ class Simulator
   def calc_planC(amp,usage_per_week)
 
   #料金テーブルのCSVデータをインポート
-  # basic_charge_table = Basic_charge.import2(path: "../csv/tokyogas/basic_charge.csv")
+  basic_charge_table = Basic_charge.import2(path: "../csv/tokyogas/basic_charge.csv")
 
-    basic_charge =
-    if amp == 10 then 858
-    elsif amp == 15 then 858
-    elsif amp == 20 then 858
-    elsif amp == 30 then 858
-    elsif amp == 40 then 1144
-    elsif amp == 50 then 1430
-    elsif amp == 60 then 1716
-    else '???'
-    end
+  #入力値を含む料金データを取得
+  charge_data = basic_charge_table.find { |data| data[:amp] == "#{amp}" }
+
+  #データから値を取得
+  basic_charge = charge_data[:amp].to_i
 
     usage_charge =
     if usage_per_week <= 140 then 23.67*usage_per_week
