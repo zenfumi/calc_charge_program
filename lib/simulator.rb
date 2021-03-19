@@ -11,15 +11,15 @@ class Simulator
 
   def simulate
     # プロバイダと料金プランのCSVデータをインポート
-    plans = Plan.import(path: "plans.csv")
+    plans = Plan.import(path: "csv/plans.csv")
     # 該当プランに計算結果(メソッドの返り値)のハッシュを追加・全プラン表示
     plans.each do |plan|
-      case  plan[:provider_name]
-      when "東京電力エナジーパートナー"
+      case
+      when plan[:provider_name] == "東京電力エナジーパートナー"
         plan[:price]= "#{self.calc_planA(@amp,@usage_per_week)}"
-      when "Looopでんき"
+      when plan[:provider_name] == "Looopでんき"
         plan[:price]= "#{self.calc_planB(@amp,@usage_per_week)}"
-      when "東京ガス" && [30,40,50,60].include?(@amp)
+      when plan[:provider_name] == "東京ガス" && [30,40,50,60].include?(@amp)
         plan[:price] = "#{self.calc_planC(@amp,@usage_per_week)}"
       end
     end
@@ -34,7 +34,7 @@ class Simulator
   def calc_planA(amp,usage_per_week)
 
     #料金テーブルのCSVデータをインポート
-    basic_charge_table = Basic_charge.import(path: "basic_charge.csv")
+    basic_charge_table = Basic_charge.import(path: "../csv/tokyo_energy_partner/basic_charge.csv")
 
     #入力値を含む料金データを取得
     charge_data = basic_charge_table.find { |data| data[:amp] == "#{amp}" }
@@ -65,6 +65,10 @@ class Simulator
 
   # 東京ガスのずっとも電気１の計算メソッド
   def calc_planC(amp,usage_per_week)
+
+  #料金テーブルのCSVデータをインポート
+  # basic_charge_table = Basic_charge.import2(path: "../csv/tokyogas/basic_charge.csv")
+
     basic_charge =
     if amp == 10 then 858
     elsif amp == 15 then 858
