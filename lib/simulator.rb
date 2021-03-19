@@ -1,5 +1,6 @@
 require "pry"
 require_relative "plan"
+require_relative "basic_charge"
 
 class Simulator
 
@@ -29,24 +30,17 @@ class Simulator
   private
 
   #東京電力エナジーパートナーの従量電灯Bの計算メソッド
+
   def calc_planA(amp,usage_per_week)
-    basic_charge =
-      case amp
-      when 10
-        286
-      when 15
-        286
-      when 20
-        572
-      when 30
-        858
-      when 40
-        1144
-      when 50
-        1430
-      when 60
-        1716
-      end
+
+    #料金テーブルのCSVデータをインポート
+    basic_charge_table = Basic_charge.import(path: "basic_charge.csv")
+
+    #入力値を含む料金データを取得
+    charge_data = basic_charge_table.find { |data| data[:amp] == "#{amp}" }
+
+    #データから値を取得
+    basic_charge = charge_data[:amp].to_i
 
     usage_charge =
       if usage_per_week <= 120 then 19.88*usage_per_week
