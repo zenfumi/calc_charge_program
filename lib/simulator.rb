@@ -11,19 +11,20 @@ class Simulator
 
   def simulate
     # プロバイダと料金プランのCSVデータをインポート
-    plans = Plan.import(path: "csv/plans.csv")
+    csv_data = Plan.import(path: "csv/plans.csv")
     # 該当プランに計算結果(メソッドの返り値)のハッシュを追加・全プラン表示
-    plans.each do |plan|
+    plan_list = csv_data.each do |data|
       case
-      when plan[:provider_name] == "東京電力エナジーパートナー"
-        plan[:price]= "#{self.calc_planA(@amp,@usage_per_week)}"
-      when plan[:provider_name] == "Looopでんき"
-        plan[:price]= "#{self.calc_planB(@amp,@usage_per_week)}"
-      when plan[:provider_name] == "東京ガス" && [30,40,50,60].include?(@amp)
-        plan[:price] = "#{self.calc_planC(@amp,@usage_per_week)}"
+      when data[:provider_name] == "東京電力エナジーパートナー"
+        data[:price]= "#{self.calc_planA(@amp,@usage_per_week)}"
+      when data[:provider_name] == "Looopでんき"
+        data[:price]= "#{self.calc_planB(@amp,@usage_per_week)}"
+      when data[:provider_name] == "東京ガス" && [30,40,50,60].include?(@amp)
+        data[:price] = "#{self.calc_planC(@amp,@usage_per_week)}"
       end
     end
-    puts plans
+    # priceにデータが入ってるプランのみに絞り込み
+    p output_array = plan_list.select{|plan| plan.has_key?(:price)}
   end
 
   #各プランごとに計算メソッドを定義
