@@ -39,9 +39,8 @@ class Simulator
 
     #入力値を含む料金データを取得
     charge_data = basic_charge_table.find { |data| data[:amp] == "#{amp}" }
-
     #データから値を取得
-    basic_charge = charge_data[:amp].to_i
+    basic_charge = charge_data[:basic_charge].to_i
 
     usage_charge =
       if usage_per_week <= 120 then 19.88*usage_per_week
@@ -64,17 +63,17 @@ class Simulator
     total_charge = (basic_charge + usage_charge).floor
   end
 
-  # 東京ガスのずっとも電気１の計算メソッド
-  def calc_planC(amp,usage_per_week)
+    # 東京ガスのずっとも電気１の計算メソッド
+    def calc_planC(amp,usage_per_week)
 
-  #料金テーブルのCSVデータをインポート
-  basic_charge_table = Basic_charge.import2(path: "../csv/tokyogas/basic_charge.csv")
+    #料金テーブルのCSVデータをインポート
+    basic_charge_table = Basic_charge.import2(path: "../csv/tokyogas/basic_charge.csv")
 
-  #入力値を含む料金データを取得
-  charge_data = basic_charge_table.find { |data| data[:amp] == "#{amp}" }
+    #入力値を含む料金データを取得
+    charge_data = basic_charge_table.find { |data| data[:amp] == "#{amp}" }
 
-  #データから値を取得
-  basic_charge = charge_data[:amp].to_i
+    #データから値を取得
+    basic_charge = charge_data[:basic_charge].to_i
 
     usage_charge =
     if usage_per_week <= 140 then 23.67*usage_per_week
