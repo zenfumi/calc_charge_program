@@ -76,14 +76,21 @@ class Simulator
     #データから値を取得
     basic_charge = charge_data[:basic_charge].to_i
 
-    usage_charge = usage_per_week*26.4
+    #電気量料金テーブルのCSVデータをインポート
+    usage_charge_table = Usage_charge.import2(path: "../csv/loop/usage_charge.csv")
+
+    #計算で使用する単価を取得
+    usage_charge_data = usage_charge_table.find { |data| data[:kwh] == "0" }
+    unit_price = usage_charge_data[:unit_price].to_f
+
+    usage_charge = usage_per_week*unit_price
 
     # 最後の評価式
     total_charge = (basic_charge + usage_charge).floor
   end
 
     # 東京ガスのずっとも電気１の計算メソッド
-    def calc_planC(amp,usage_per_week)
+  def calc_planC(amp,usage_per_week)
 
     #料金テーブルのCSVデータをインポート
     basic_charge_table = Basic_charge.import2(path: "../csv/tokyogas/basic_charge.csv")
