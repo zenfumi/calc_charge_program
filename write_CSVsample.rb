@@ -1,12 +1,7 @@
 require "csv"
 
-CSV.open("basic_charges.csv", "wb") do |csv|
-  csv << ["amp", "basic_charge"]
-  csv << ["10","858"]
-  csv << ["15","858"]
-  csv << ["20","858"]
-  csv << ["30","858"]
-  csv << ["40","1144"]
-  csv << ["50","1430"]
-  csv << ["60","1716"]
+CSV.open("usage_charge.csv", "wb") do |csv|
+  csv << ["kwh", "unit_price"]
+  csv << ["120","19.88"]
+  csv << ["300","26.48"]
 end

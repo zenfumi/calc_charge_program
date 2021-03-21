@@ -1,6 +1,7 @@
 require "pry"
 require_relative "plan"
 require_relative "basic_charge"
+require_relative "usage_charge"
 
 class Simulator
 
@@ -34,7 +35,7 @@ class Simulator
 
   def calc_planA(amp,usage_per_week)
 
-    #料金テーブルのCSVデータをインポート
+    #基本料金テーブルのCSVデータをインポート
     basic_charge_table = Basic_charge.import(path: "../csv/tokyo_energy_partner/basic_charge.csv")
 
     #入力値を含む料金データを取得
@@ -42,10 +43,22 @@ class Simulator
     #データから値を取得
     basic_charge = charge_data[:basic_charge].to_i
 
+    #電気量料金テーブルのCSVデータをインポート
+    usage_charge_table = Usage_charge.import(path: "../csv/tokyo_energy_partner/usage_charge.csv")
+    #計算で使用する単価を取得
+    usage_charge_data1 = usage_charge_table.find { |data| data[:kwh] == "120" }
+    usage_charge1 = usage_charge_data1[:unit_price].to_f
+
+    usage_charge_data2 = usage_charge_table.find { |data| data[:kwh] == "300" }
+    usage_charge2 = usage_charge_data2[:unit_price].to_f
+
+    usage_charge_data3 = usage_charge_table.find { |data| data[:kwh] == "301" }
+    usage_charge3 = usage_charge_data3[:unit_price].to_f
+
     usage_charge =
-      if usage_per_week <= 120 then 19.88*usage_per_week
-      elsif usage_per_week <= 300 then 19.88*120 + 26.48*(usage_per_week-120)
-      elsif usage_per_week > 300 then 19.88*120 + 26.48*180 + 30.57*(usage_per_week-300)
+      if usage_per_week <= 120 then usage_charge1*usage_per_week
+      elsif usage_per_week <= 300 then usage_charge1*120 + usage_charge2*(usage_per_week-120)
+      elsif usage_per_week > 300 then usage_charge1*120 + usage_charge2*180 + usage_charge3*(usage_per_week-300)
       else '???'
       end
 
@@ -55,11 +68,17 @@ class Simulator
 
   # Looopでんきのおうちプランの計算メソッド
   def calc_planB(amp,usage_per_week)
-    basic_charge = 0
+
+    #基本料金テーブルのCSVデータをインポート
+    basic_charge_table = Basic_charge.import3(path: "../csv/loop/basic_charge.csv")
+    #入力値を含む料金データを取得
+    charge_data = basic_charge_table.find { |data| data[:amp] == "#{amp}" }
+    #データから値を取得
+    basic_charge = charge_data[:basic_charge].to_i
 
     usage_charge = usage_per_week*26.4
 
-  # 最後の評価式
+    # 最後の評価式
     total_charge = (basic_charge + usage_charge).floor
   end
 
