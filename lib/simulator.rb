@@ -101,10 +101,24 @@ class Simulator
     #データから値を取得
     basic_charge = charge_data[:basic_charge].to_i
 
+    #電気量料金テーブルのCSVデータをインポート
+    usage_charge_table = Usage_charge.import3(path: "../csv/tokyogas/usage_charge.csv")
+
+    #計算で使用する単価を取得
+    usage_charge_data1 = usage_charge_table.find { |data| data[:kwh] == "140" }
+
+    unit_price1 = usage_charge_data1[:unit_price].to_f
+
+    usage_charge_data2 = usage_charge_table.find { |data| data[:kwh] == "350" }
+    unit_price2 = usage_charge_data2[:unit_price].to_f
+
+    usage_charge_data3 = usage_charge_table.find { |data| data[:kwh] == "351" }
+    unit_price3 = usage_charge_data3[:unit_price].to_f
+
     usage_charge =
-    if usage_per_week <= 140 then 23.67*usage_per_week
-    elsif usage_per_week <= 350 then 23.67*140 + 23.88*(usage_per_week-140)
-    elsif usage_per_week > 350 then 23.67*140 + 23.88*210 + 26.41*(usage_per_week-350)
+    if usage_per_week <= 140 then unit_price1*usage_per_week
+    elsif usage_per_week <= 350 then unit_price1*140 + unit_price2*(usage_per_week-140)
+    elsif usage_per_week > 350 then unit_price1*140 + unit_price2*210 + unit_price3*(usage_per_week-350)
     else '???'
     end
 
