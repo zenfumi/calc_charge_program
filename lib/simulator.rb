@@ -19,6 +19,12 @@ class Simulator
     usage_datas3 = Usage_charge.import3(path: "../csv/tokyogas/usage_charge.csv")
     # 東京ガスのずっとも電気１の電気量料金
     usage_charge3 = calculate(usage_datas3)
+
+    # JXTGでんき 従量電灯B たっぷりプランの電気量料金の電気量料金テーブルのCSVデータをインポート
+    usage_datas4 = Usage_charge.import4(path: "../csv/jxtg/usage_charge.csv")
+    # 東京ガスのずっとも電気１の電気量料金
+    usage_charge4 = calculate(usage_datas4)
+
     # Looopでんきのおうちプランの電気量料金テーブルのCSVデータをインポート
     usage_datas2 = Usage_charge.import2(path: "../csv/loop/usage_charge.csv")
     # Looopでんきのおうちプランの電気量料金の単価
@@ -30,6 +36,7 @@ class Simulator
     basic_charge_table  = Basic_charge.import(path: "../csv/tokyo_energy_partner/basic_charge.csv")
     basic_charge_table2 = Basic_charge.import2(path: "../csv/loop/basic_charge.csv")
     basic_charge_table3 = Basic_charge.import3(path: "../csv/tokyogas/basic_charge.csv")
+    basic_charge_table4 = Basic_charge.import4(path: "../csv/jxtg/basic_charge.csv")
 
 
     # プロバイダと料金プラン名のCSVデータをインポート
@@ -49,6 +56,10 @@ class Simulator
       when data[:provider_name] == "東京ガス" && [30,40,50,60].include?(@amp)
       charge_data3 = basic_charge_table3.find { |data| data[:amp] == "#{@amp}" }
       data[:price]= (charge_data3[:basic_charge].to_i + usage_charge3).floor.to_s
+
+      when data[:provider_name] == "JXTGでんき" && [30,40,50,60].include?(@amp)
+      charge_data4 = basic_charge_table4.find { |data| data[:amp] == "#{@amp}" }
+      data[:price]= (charge_data4[:basic_charge].to_i + usage_charge4).floor.to_s
       end
     end
 
@@ -71,104 +82,6 @@ class Simulator
   return usage_charge
   end
 end
-
-#   # 東京電力エナジーパートナーの従量電灯Bの計算メソッド
-#   def calc_planA(amp,usage_per_week)
-
-#     # 基本料金テーブルのCSVデータをインポート
-#     basic_charge_table = Basic_charge.import(path: "../csv/tokyo_energy_partner/basic_charge.csv")
-
-#     # 入力アンペアに対応する基本料金データ行を取得
-#     charge_data = basic_charge_table.find { |data| data[:amp] == "#{amp}" }
-
-#     # データ行から基本料金を取得
-#     basic_charge = charge_data[:basic_charge].to_i
-
-#     # 電気量料金テーブルのCSVデータをインポート
-#     usage_charge_table = Usage_charge.import(path: "../csv/tokyo_energy_partner/usage_charge.csv")
-
-#     # 計算で使用する単価を取得
-#     usage_charge_data1 = usage_charge_table.find { |data| data[:kwh] == "120" }
-#     unit_price1 = usage_charge_data1[:unit_price].to_f
-
-#     usage_charge_data2 = usage_charge_table.find { |data| data[:kwh] == "300" }
-#     unit_price2 = usage_charge_data2[:unit_price].to_f
-
-#     usage_charge_data3 = usage_charge_table.find { |data| data[:kwh] == "301" }
-#     unit_price3 = usage_charge_data3[:unit_price].to_f
-
-#     # 料金計算部分
-#     usage_charge =
-#       if usage_per_week <= 120 then unit_price1*usage_per_week
-#       elsif usage_per_week <= 300 then unit_price1*120 + unit_price2*(usage_per_week-120)
-#       elsif usage_per_week > 300 then unit_price1*120 + unit_price2*180 + unit_price3*(usage_per_week-300)
-#       else '???'
-#       end
-
-#     total_charge = (basic_charge + usage_charge).floor
-#   end
-
-#   # Looopでんきのおうちプランの計算メソッド
-#   def calc_planB(amp,usage_per_week)
-
-#     # 基本料金テーブルのCSVデータをインポート
-#     basic_charge_table = Basic_charge.import3(path: "../csv/loop/basic_charge.csv")
-
-#     # 入力アンペアに対応する基本料金データ行を取得
-#     charge_data = basic_charge_table.find { |data| data[:amp] == "#{amp}" }
-
-#     # データ行から基本料金を取得
-#     basic_charge = charge_data[:basic_charge].to_i
-
-#     # 電気量料金テーブルのCSVデータをインポート
-#     usage_charge_table = Usage_charge.import2(path: "../csv/loop/usage_charge.csv")
-
-#     # 計算で使用する単価を取得
-#     usage_charge_data = usage_charge_table.find { |data| data[:kwh] == "0" }
-#     unit_price = usage_charge_data[:unit_price].to_f
-
-#     usage_charge = usage_per_week*unit_price
-
-#     total_charge = (basic_charge + usage_charge).floor
-#   end
-
-#   # 東京ガスのずっとも電気１の計算メソッド
-#   def calc_planC(amp,usage_per_week)
-
-#     # 基本料金テーブルのCSVデータをインポート
-#     basic_charge_table = Basic_charge.import2(path: "../csv/tokyogas/basic_charge.csv")
-
-#     # 入力アンペアに対応する基本料金データ行を取得
-#     charge_data = basic_charge_table.find { |data| data[:amp] == "#{amp}" }
-
-#     # データ行から基本料金を取得
-#     basic_charge = charge_data[:basic_charge].to_i
-
-#     # 電気量料金テーブルのCSVデータをインポート
-#     usage_charge_table = Usage_charge.import3(path: "../csv/tokyogas/usage_charge.csv")
-
-#     # 計算で使用する単価を取得
-#     usage_charge_data1 = usage_charge_table.find { |data| data[:kwh] == "140" }
-#     unit_price1 = usage_charge_data1[:unit_price].to_f
-
-#     usage_charge_data2 = usage_charge_table.find { |data| data[:kwh] == "350" }
-#     unit_price2 = usage_charge_data2[:unit_price].to_f
-
-#     usage_charge_data3 = usage_charge_table.find { |data| data[:kwh] == "351" }
-#     unit_price3 = usage_charge_data3[:unit_price].to_f
-
-#     usage_charge =
-#     if usage_per_week <= 140 then unit_price1*usage_per_week
-#     elsif usage_per_week <= 350 then unit_price1*140 + unit_price2*(usage_per_week-140)
-#     elsif usage_per_week > 350 then unit_price1*140 + unit_price2*210 + unit_price3*(usage_per_week-350)
-#     else '???'
-#     end
-
-#     # 最後の評価式
-#     total_charge = (basic_charge + usage_charge).floor
-#   end
-# end
-
 
 # #****************実行部分***************************************************************
 
