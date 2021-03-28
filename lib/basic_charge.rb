@@ -3,35 +3,31 @@ require "pry"
 
 class Basic_charge
   def self.import(path)
-    #全てを読込、配列を作成
+    if path[:path].include?("tokyo_energy_partner")
     CSV.read("csv/tokyo_energy_partner/basic_charge.csv", headers: true).map do |row|
       {
         amp: row["amp"],
         basic_charge: row["basic_charge"]
       }
     end
-  end
 
-  # 以下、共通化すること
-  def self.import2(path)
+    elsif path[:path].include?("loop")
     CSV.read("csv/loop/basic_charge.csv", headers: true).map do |row|
       {
         amp: row["amp"],
         basic_charge: row["basic_charge"]
       }
     end
-  end
 
-  def self.import3(path)
+    elsif path[:path].include?("tokyogas")
     CSV.read("csv/tokyogas/basic_charge.csv", headers: true).map do |row|
       {
         amp: row["amp"],
         basic_charge: row["basic_charge"]
       }
     end
-  end
 
-  def self.import4(path)
+    elsif path[:path].include?("jxtg")
     CSV.read("csv/jxtg/basic_charge.csv", headers: true).map do |row|
       {
         amp: row["amp"],
@@ -39,4 +35,5 @@ class Basic_charge
       }
     end
   end
+end
 end
