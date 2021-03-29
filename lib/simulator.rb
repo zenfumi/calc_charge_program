@@ -46,20 +46,20 @@ class Simulator
     plan_list = plan_datas.each do |data|
       case
       when data[:provider_name] == "東京電力エナジーパートナー"
-      charge_data = basic_charge_table.find { |data| data[:amp] == "#{@amp}" }
-      data[:price]= (charge_data[:basic_charge].to_f + usage_charge1).floor.to_s
+      charge_data = basic_charge_table.find { |data| data[:amp] == @amp }
+      data[:price]= (charge_data[:basic_charge] + usage_charge1).floor.to_s
 
       when data[:provider_name] == "Looopでんき"
-      charge_data2 = basic_charge_table2.find { |data| data[:amp] == "#{@amp}" }
-      data[:price]= (charge_data2[:basic_charge].to_f  + @usage_per_month * unit_price2).floor.to_s
+      charge_data2 = basic_charge_table2.find { |data| data[:amp] == @amp }
+      data[:price]= (charge_data2[:basic_charge] + @usage_per_month * unit_price2).floor.to_s
 
       when data[:provider_name] == "東京ガス" && [30,40,50,60].include?(@amp)
-      charge_data3 = basic_charge_table3.find { |data| data[:amp] == "#{@amp}" }
-      data[:price]= (charge_data3[:basic_charge].to_f  + usage_charge3).floor.to_s
+      charge_data3 = basic_charge_table3.find { |data| data[:amp] == @amp }
+      data[:price]= (charge_data3[:basic_charge] + usage_charge3).floor.to_s
 
       when data[:provider_name] == "JXTGでんき" && [30,40,50,60].include?(@amp)
-      charge_data4 = basic_charge_table4.find { |data| data[:amp] == "#{@amp}" }
-      data[:price]= (charge_data4[:basic_charge].to_f  + usage_charge4).floor.to_s
+      charge_data4 = basic_charge_table4.find { |data| data[:amp] == @amp }
+      data[:price]= (charge_data4[:basic_charge] + usage_charge4).floor.to_s
       end
     end
 
