@@ -1,7 +1,7 @@
 require "pry"
-require_relative "plan"
-require_relative "basic_charge"
-require_relative "usage_charge"
+require_relative "lib/plan"
+require_relative "lib/basic_charge"
+require_relative "lib/usage_charge"
 
 class Simulator
 
@@ -12,7 +12,7 @@ class Simulator
 
   def simulate
     # 東京電力エナジーパートナー従量電灯Bの電気量料金のCSVデータをインポート
-    usage_datas = Usage_charge.import(path: "../csv/tokyo_energy_partner/usage_charge.csv")
+    usage_datas = Usage_charge.import(path: "..csv/tokyo_energy_partner/usage_charge.csv")
     # 東京電力エナジーパートナーの従量電灯Bの電気量料金
     usage_charge1 = calculate(usage_datas)
     # 東京ガスのずっとも電気１の電気量料金の電気量料金テーブルのCSVデータをインポート

@@ -1,4 +1,4 @@
-require_relative '../lib/simulator.rb'
+require_relative '../simulator.rb'
 
 RSpec.describe Simulator do
   describe "プラン名と料金を含む配列数と段階別の計算結果" do
