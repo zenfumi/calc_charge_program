@@ -2,13 +2,18 @@
 - ユーザーが１ヶ月の使用量（kWh）を入力すると各プラン名およびそのプランの電気料金を返すSimulatorクラスを実装(小数点切り捨て)
 - Simulatorクラスの利用例
 
-### 動作確認方法
-- git clone 後、以下のコマンドを実行してください。
-
 ```
 simulator = Simulator.new(40, 280)
 simulator.simulate
 #=> [{ provider_name: 'Looopでんき', plan_name: 'おうちプラン', price: '1234' }, …]
+```
+
+### 動作確認方法
+- git clone 後、以下のコマンドを実行してください。
+
+```
+$ bundle exec rspec
+$ ruby simulator.rb
 ```
 
 ### プログラムの条件
